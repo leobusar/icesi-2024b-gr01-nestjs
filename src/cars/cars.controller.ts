@@ -1,19 +1,35 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CarsService } from './cars.service';
+import { CreateCarDto } from './dtos/create-car.dto';
 
 @Controller('cars')
 export class CarsController {
+  constructor(private readonly  carsService: CarsService) {
+
+  }
   @Get()
-  findAll(): string {
-    return 'This actions return all cars';
+  findAll() {
+    return this.carsService.findAll();
   }
 
   @Post()
-  create(): string {
-    return 'This act adds a car';
+  create(@Body() car: CreateCarDto) {
+    return this.carsService.create(car); 
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return 'This actions return all cars' + id;
+  findOne(@Param('id', ParseUUIDPipe) id: string ) {
+    return this.carsService.getById(id);
   }
+
+  // @Patch(':id')
+  // update(@Param('id', ParseUUIDPipe) id: string, @Body() car: CreateCarDto) {
+  //   return this.carsService.update(id, car);
+  // }
+  
+  @Delete(':id')
+  delete(@Param('id', ParseUUIDPipe) id: string ) {
+    return this.carsService.delete(id);
+  }  
+  
 }
