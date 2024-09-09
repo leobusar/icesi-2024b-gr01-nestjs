@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Car } from './interfaces/car';
 import {v4 as uuid} from 'uuid';
 import { CreateCarDto } from './dtos/create-car.dto';
+import { UpdateCarDto } from './dtos/update-car.dto';
 
 @Injectable()
 export class CarsService {
@@ -43,7 +44,7 @@ export class CarsService {
         return newcar;
     }
 
-    update(id:string, car: Car): Car {
+    update(id:string, car: UpdateCarDto): Car {
         // const index = this.cars.findIndex(car => car.id === id);
         // this.cars[index] = car;
         const carUpdate = this.getById(id);

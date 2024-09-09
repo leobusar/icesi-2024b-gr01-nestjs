@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dtos/create-car.dto';
+import { UpdateCarDto } from './dtos/update-car.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -22,10 +23,10 @@ export class CarsController {
     return this.carsService.getById(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id', ParseUUIDPipe) id: string, @Body() car: CreateCarDto) {
-  //   return this.carsService.update(id, car);
-  // }
+  @Patch(':id')
+   update(@Param('id', ParseUUIDPipe) id: string, @Body() car:UpdateCarDto) {
+     return this.carsService.update(id, car);
+  }
   
   @Delete(':id')
   delete(@Param('id', ParseUUIDPipe) id: string ) {
