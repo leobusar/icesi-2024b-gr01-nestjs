@@ -1,60 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Car } from './interfaces/car';
-import {v4 as uuid} from 'uuid';
+import { Car } from './entities/car.entity';
 import { CreateCarDto } from './dtos/create-car.dto';
 import { UpdateCarDto } from './dtos/update-car.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BrandsService } from 'src/brands/brands.service';
 
 @Injectable()
 export class CarsService {
-    cars: Car[] = [
-        {
-            id: uuid(),
-            model: 'Fiesta',
-            brand: 'Ford',
-            year: 2002,
-        },
-        {
-            id: uuid(),
-            model: 'Focus',
-            brand: 'Ford',
-            year: 2010,
-        },
-        {
-            id: uuid(),
-            model: 'Civic',
-            brand: 'Honda',
-            year: 2001,
-        },
-    ];
 
-    findAll(): Car[] {
-        return this.cars;
+    constructor( @InjectRepository(Car) private readonly carRepository: Repository<Car>, private readonly brandService: BrandsService ) {
+
     }
 
-    getById(id: string): Car {
-        const car = this.cars.find(car => car.id === id)
+    async findAll(){
+        return await this.carRepository.find();
+    }
+
+    getById(id: string) {
+        const car = this.carRepository.findOneBy({id})
         if(car === undefined)
             throw new NotFoundException(`Car with id ${id} not found`);
         return car;
     }
 
-    create(car: CreateCarDto): Car {
-        const newcar: Car  =  {id : uuid(), ...car};
-        this.cars.push(newcar);
-        return newcar;
+    async create(car: CreateCarDto) {
+        const brand = await this.brandService.findOne(car.brand);
+        const newCar = Object.assign({...car, brand}); 
+        return this.carRepository.save(newCar);
+        //const newcar: Car  =  { ...car};
+        //this.cars.push(newcar);
+        //return newcar;
     }
 
-    update(id:string, car: UpdateCarDto): Car {
+    update(id:string, car: UpdateCarDto) {
         // const index = this.cars.findIndex(car => car.id === id);
         // this.cars[index] = car;
         const carUpdate = this.getById(id);
         Object.assign(carUpdate, car);
 
-        return carUpdate;
+        //return carUpdate;
     }
 
     delete(id: string): void {
-        this.cars = this.cars.filter(car => car.id !== id);
+        //this.cars = this.cars.filter(car => car.id !== id);
 
     }
 }

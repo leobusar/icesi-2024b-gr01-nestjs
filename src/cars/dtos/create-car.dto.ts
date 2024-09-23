@@ -1,13 +1,12 @@
-import { IsInt, IsNotEmpty, IsString, Length, Max,  Min } from "class-validator";
+import { IsInt, IsNotEmpty, IsString, IsUUID, Max,  Min } from "class-validator";
 
 export class CreateCarDto {
     @IsString()
     model: string;
     
-    @IsString({message: 'Brand debe ser una cadena'})
+    @IsUUID()
     @IsNotEmpty()
-    @Length(3,20)
-
+//    @Length(3,20)
     brand: string;
     
     @IsInt()

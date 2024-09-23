@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Car } from "src/cars/entities/car.entity";
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Brand {
@@ -10,6 +11,9 @@ export class Brand {
 
     @Column('text', {unique: true})
     slug: string;
+
+    @OneToMany(() => Car, car => car.brand)
+    cars: Car[];
 
     @BeforeInsert()
     checkSlug(): void {

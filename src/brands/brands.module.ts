@@ -10,5 +10,6 @@ import { Brand } from './entities/brand.entity';
   ],
   controllers: [BrandsController],
   providers: [BrandsService],
+  exports: [BrandsService]
 })
 export class BrandsModule {}
