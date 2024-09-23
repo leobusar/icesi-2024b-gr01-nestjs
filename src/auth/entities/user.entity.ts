@@ -14,6 +14,12 @@ export class User {
     @Column('text', {select: false})
     password: string;
 
+    @Column('boolean', {default: true})
+    isActive: boolean;
+
+    @Column('text', {array: true, default: ['user']})
+    roles: string[];
+
     @BeforeInsert()
     checkEmail(): void {
         this.email = this.email.toLowerCase();
