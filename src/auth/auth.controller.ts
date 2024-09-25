@@ -5,6 +5,9 @@ import { LoginUserDto } from './dtos/login-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { GetUser } from './decorators/get-user/get-user.decorator';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { ValidRoles } from './interfaces/valid-roles';
+import { Auth } from './decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -27,11 +30,21 @@ export class AuthController {
     }
 
     @Get('routeprotected2')
+    //@SetMetadata(META_ROLES, [ValidRoles.admin, ValidRoles.user])
+    @RoleProtected(ValidRoles.admin, ValidRoles.user)
     @UseGuards(AuthGuard(), UserRoleGuard)
     routeProtected2(@Req() req) {
         console.log(req.user);
         return 'This route is protected';
     }
+
+    @Get('routeprotected4')
+    @Auth(ValidRoles.admin, ValidRoles.write)
+    routeProtected4(@Req() req) {
+        console.log(req.user);
+        return 'This route is protected';
+    }
+
 
     @Get('routeprotected3')
     @UseGuards(AuthGuard())
